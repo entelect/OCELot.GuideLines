@@ -1,15 +1,23 @@
 # OCELot.GuideLines
-A set of guidelines for developing new modules for OCELot
+A set of guidelines for developing new modules for OCELot. For the latest version, please visit [https://github.com/entelect/OCELot.GuideLines](https://github.com/entelect/OCELot.GuideLines)
 
-## Folder Srtructure ##
+Your libray module should be prefixed with OCELot. so for example, if you are making a module that will be used for error handeling and you want to name it ErrorHandling, your module will then be OCELot.ErrorHandling . To make things easier to set up in team city, we will from now on, be refering to this module name as *OCELot.%system.teamcity.projectName%*
+## GitHub Repository ##
+- When creating the repo, it should belong to the entelect Organisation.
+- The repo name should follow the same naming convention as set out in the above section. I.e. : *OCELot.%system.teamcity.projectName%*
+
+## General Folder Srtructure ##
+	Ocelot.%system.teamcity.projectName%
 	├── [.git]
 	├── [packages]
 	|   └── repositories.config
 	├── [src]
+	|   └── OCELot.%system.teamcity.projectName%\
 	├── [tests]
+	|   └── OCELot.%system.teamcity.projectName%.Tests\
 	├── .gitignore
 	├── LICENCE
-	├── <ProjectName>.sln
+	├── OCELot.%system.teamcity.projectName%.sln
 	├── _site
 	└── README.md
 
@@ -20,13 +28,13 @@ A set of guidelines for developing new modules for OCELot
 4. Enable Code Analysis on Build for all code projects
 
 ## Setting up Automated Builds ##
-Team City is reccomended and documented here, but the concepts can be carried over to other providers.
+Team City is reccomended and documented here, but the concepts can be carried over to other providers. There is a CI template that should be used for all new modules..
 
-There should be a template soon which can be used for new projects.
+**VCS Roots**: One for all the develpment branches & one for master, be sure to exclude gh-pages branch as thisi is used by github to host documentation about your project.
 
-VCS Roots: One for all the dev branches & one for master, be sure to exclude gh-pages branch as thisi is used by github to host documentation about your project.
+**CI Build steps** - I have included instructions for those that are copying the existing config (Ocelot.ErrorHandling):
 
-CI Build steps - I have included instructions for those that are copying the existing config (Ocelot.ErrorHandling):
+Images have been provided in the git repository: [https://github.com/entelect/OCELot.GuideLines/tree/master/AutomatedBuilds/Continuous%20Integration](https://github.com/entelect/OCELot.GuideLines/tree/master/AutomatedBuilds/Continuous%20Integration)
 
 1. Restore Nuget Packages
 	- Set "Path to Solution"
@@ -38,7 +46,7 @@ CI Build steps - I have included instructions for those that are copying the exi
 4. Run DotCover manually to generate the artifact to publish to SonarCube
 	- For now you will have to customise the script unill we can find an easier way
 	- Script:
-	> %teamcity.tool.dotCover%\dotCover.exe analyse /TargetExecutable="%env.ProgramFiles(x86)%\NUnit 2.6.2\bin\nunit-console.exe" /TargetWorkingDir=%teamcity.build.checkoutDir%\tests\OCELot.ErrorHandling.Tests\bin\Debug\ /TargetArguments=OCELot.ErrorHandling.Tests.dll /Output=%teamcity.build.checkoutDir%\dotCover\dotCover.html /ReportType=HTML
+	> %teamcity.tool.dotCover%\dotCover.exe analyse /TargetExecutable="%env.ProgramFiles(x86)%\NUnit 2.6.2\bin\nunit-console.exe" /TargetWorkingDir=%teamcity.build.checkoutDir%\tests\OCELot.%system.teamcity.projectName%.Tests\bin\Debug\ /TargetArguments=OCELot.%system.teamcity.projectName%.Tests.dll /Output=%teamcity.build.checkoutDir%\dotCover\dotCover.html /ReportType=HTML
 
 5. Publish to SonarCube
 	- There shouldn't be any extra options to set here if you are copying the existing config 
@@ -47,6 +55,11 @@ CI Build steps - I have included instructions for those that are copying the exi
 7. Inspections (.NET)
 	- Set "Solution file path"
 	- Set project names to check in "Projects filter"
+
+**Build Template Parmeters**
+
+- %MajorVersion% - The major version number for this project
+- %MinorVersion% - The minor version number for this project
 
 ## Code Coverage ##
 
